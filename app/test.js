@@ -1,7 +1,8 @@
-var host = window.location.hostname
-window.socket = new WebSocket('ws://' + host + ':8001')
+var host = window.location.hostname;
+window.socket = new WebSocket('ws://' + host + ':8001');
 
 window.socket.onopen = () => {
+  console.info('Connected!');
   window.socket.send('opened');
 };
 
@@ -14,5 +15,14 @@ window.socket.onerror = (e) => {
 };
 
 window.socket.onclose = (e) => {
-  console.log(e.code, e.reason);
+  console.log('Connection closed.', e.code, e.reason);
 };
+
+//
+// window.socket.on('open', function open() {
+//   window.socket.send('something');
+// });
+//
+// window.socket.on('message', function(data, flags) {
+//   console.log('kurwa');
+// });

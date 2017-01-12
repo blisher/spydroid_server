@@ -1,13 +1,24 @@
 // Websocket server setup
-var ws = require('nodejs-websocket')
-var server = ws.createServer(function (conn) {
-  conn.on('text', function (str) {
-    broadcast(server, str.toUpperCase() + '!!!')
-  })
-  conn.on('close', function (code, reason) {
-    console.log('Connection closed')
-  })
-}).listen(8001)
+// var ws = require('nodejs-websocket')
+// var server = ws.createServer(function (conn) {
+//   conn.on('text', function (str) {
+//     broadcast(server, str.toUpperCase() + '!!!')
+//   })
+//   conn.on('close', function (code, reason) {
+//     console.log('Connection closed')
+//   })
+// }).listen(8001)
+//
+
+var WebSocket = require('ws');
+var server = new WebSocket.Server({port: 8001});
+
+server.on('text', function (str) {
+  broadcast(server, str.toUpperCase() + '!!!')
+});
+server.on('close', function (code, reason) {
+  console.log('Disconnected.')
+});
 
 function broadcast(server, msg) {
   server.connections.forEach(function (conn) {
@@ -28,4 +39,3 @@ app.get('/', function(request, response) {
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-server.on('error', function(err) { console.error('Node error: ' + err) });
