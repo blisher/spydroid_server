@@ -2,12 +2,18 @@
 var ws = require('nodejs-websocket')
 var server = ws.createServer(function (conn) {
   conn.on('text', function (str) {
-    conn.sendText(str.toUpperCase() + '!!!')
+    broadcast(server, str.toUpperCase() + '!!!')
   })
   conn.on('close', function (code, reason) {
     console.log('Connection closed')
   })
 }).listen(8001)
+
+function broadcast(server, msg) {
+  server.connections.forEach(function (conn) {
+    conn.sendText(msg)
+  })
+}
 
 // Webserver setup
 var express = require('express');
@@ -22,3 +28,4 @@ app.get('/', function(request, response) {
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
+server.on('error', function(err) { console.error('Node error: ' + err) });

@@ -1,4 +1,5 @@
-window.socket = new WebSocket('ws://localhost:8001')
+var host = window.location.hostname
+window.socket = new WebSocket('ws://' + host + ':8001')
 
 window.socket.onopen = () => {
   window.socket.send('opened');
