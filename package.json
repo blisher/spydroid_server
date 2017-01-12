@@ -1,0 +1,25 @@
+{
+  "name": "spydroid_server",
+  "version": "0.0.1",
+  "description": "Node.js for blisher/spydroid",
+  "engines": {
+    "node": "6.3.0"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "2.4.1",
+    "express": "4.13.3",
+    "nodejs-websocket": "1.7.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blisher/spydroid_server"
+  },
+  "keywords": [
+
+  ],
+  "license": "MIT"
+}
