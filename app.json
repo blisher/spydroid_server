@@ -1,0 +1,8 @@
+{
+  "name": "Spydroid Server",
+  "description": "Node.js for blisher/spydroid",
+  "repository": "https://github.com/blisher/spydroid_server",
+  "logo": "",
+  "keywords": [],
+  "image": "heroku/nodejs"
+}

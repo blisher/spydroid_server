@@ -5,14 +5,15 @@
   "engines": {
     "node": "6.3.0"
   },
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "ejs": "2.4.1",
-    "express": "4.13.3",
-    "nodejs-websocket": "1.7.1"
+    "express": "4.14.0",
+    "nodejs-websocket": "1.7.1",
+    "jquery": "3.1.1"
   },
   "repository": {
     "type": "git",
