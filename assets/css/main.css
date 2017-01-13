@@ -1,0 +1,19 @@
+body {
+  background-color: #ECEFF1;
+}
+
+div, h1, h2, h3, h4, h5, ul, ol, li {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  height: 200px;
+  margin-bottom: 100px;
+}
+
+.header h1 {
+  text-align: center;
+  font-size: 100px;
+  line-height: 200px;
+}

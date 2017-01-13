@@ -13,8 +13,9 @@
     "ejs": "2.4.1",
     "express": "4.14.0",
     "nodejs-websocket": "1.7.1",
-    "jquery": "3.1.1",
-    "ws": "1.1.1"
+    "ws": "1.1.1",
+    "body-parser": "1.15.2",
+    "lodash": "2.4.2"
   },
   "repository": {
     "type": "git",

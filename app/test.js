@@ -1,28 +1,27 @@
-var host = window.location.hostname;
-window.socket = new WebSocket('ws://' + host + ':8001');
-
-window.socket.onopen = () => {
-  console.info('Connected!');
-  window.socket.send('opened');
-};
-
-window.socket.onmessage = (e) => {
-  console.info(e.data);
-};
-
-window.socket.onerror = (e) => {
-  console.error(e.message);
-};
-
-window.socket.onclose = (e) => {
-  console.log('Connection closed.', e.code, e.reason);
-};
-
+// var host = window.location.hostname;
+// window.socket = new WebSocket('ws://' + host + ':8001');
 //
-// window.socket.on('open', function open() {
-//   window.socket.send('something');
-// });
+// window.socket.onopen = () => {
+//   window.socket.send('Connected!');
+// };
 //
-// window.socket.on('message', function(data, flags) {
-//   console.log('kurwa');
-// });
+// window.socket.onmessage = (e) => {
+//   writeToScreen(e.data)
+// };
+//
+// window.socket.onerror = (e) => {
+//   return '-- Disconnected with error';
+// };
+//
+// window.socket.onclose = (e) => {
+//   return '-- Disconnected (closed)';
+// };
+//
+// function writeToScreen(message)
+// {
+//   var pre = document.createElement("p");
+//   pre.innerHTML = message;
+//   output.appendChild(pre);
+// }
+//
+// window.addEventListener("load", () => { output = document.getElementById("output") }, false);
