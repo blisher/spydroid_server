@@ -9,9 +9,19 @@ var server = ws.createServer(function (conn) {
         game.players.push({ name: messageObj.playerName, socket: conn })
         _.each(game.players, (player) => {
           obj = { type: 'playersInGame', players: _.map(game.players, (player) => _.pick(player, ['name'])) }
-          console.log(JSON.stringify(obj));
           player.socket.sendText(JSON.stringify(obj));
         })
+        break;
+      case 'adminGameStart':
+        var spyName = _.sample(game.players).name;
+        var placeName = randomPlaceName();
+        _.each(game.players, (player) => {
+          playerIsSpy = player.name == spyName;
+          obj = createStartGameMessage(playerIsSpy, placeName);
+          player.socket.sendText(JSON.stringify(obj));
+          console.log(JSON.stringify(obj));
+        })
+        break;
     }
   })
   conn.on('close', function (code, reason) {
@@ -83,3 +93,22 @@ var generateToken = (length) => {
 var findGame = (token) => {
   return _.find(games, (game) => game.token == token)
 }
+
+var randomPlaceName = () => {
+  return _.sample(PLACES);
+}
+
+var createStartGameMessage = (isSpy, placeName) => {
+  var result = { type: 'gameHasStarted' }
+  if (isSpy) {
+    result.isSpy = true;
+  } else {
+    result.placeName = placeName;
+  }
+  return result;
+}
+
+const PLACES = [
+  'Paris',
+  'New York'
+]
