@@ -1,4 +1,4 @@
-window.socket = io('http://localhost:5000');
+window.socket = io(window.location.origin);
 
 window.socket.on('chatMessage', function (data) {
   printUserMessage(data.color, data.userName, data.message)
