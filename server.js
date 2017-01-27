@@ -5,25 +5,25 @@ var server = app.listen(5000, () => { console.log('Running on port 5000') } )
 var io = require('socket.io').listen(server)
 
 // Socket.io server setup
-io.on('connection', function (socket) {
-  // socket.on('playerJoinedGame', function (data) {
-  //   game = findGame(data.token);
-  //   game.players.push({ name: data.playerName, socket: socket })
-  //   _.each(game.players, (player) => {
-  //     obj = { players: _.map(game.players, (player) => _.pick(player, ['name'])) }
-  //     player.socket.emit('playersInGame', obj);
-  //   })
-  // });
+io.on('connection', (socket) => {
+  socket.on('playerJoinedGame', (data) => {
+    game = findGame(data.token);
+    game.players.push({ name: data.playerName, socket: socket })
+    _.each(game.players, (player) => {
+      obj = { players: _.map(game.players, (player) => _.pick(player, ['name'])) }
+      player.socket.emit('playersInGame', obj);
+    })
+  });
 
-  // socket.on('adminGameStart', function(data) {
-  //   var spyName = _.sample(game.players).name;
-  //   var placeName = randomPlaceName();
-  //   _.each(game.players, (player) => {
-  //     playerIsSpy = player.name == spyName;
-  //     obj = createStartGameMessage(playerIsSpy, placeName);
-  //     player.socket.sendText(JSON.stringify(obj));
-  //   })
-  // })
+  socket.on('adminGameStart', (data) => {
+    var spyName = _.sample(game.players).name;
+    var placeName = randomPlaceName();
+    _.each(game.players, (player) => {
+      playerIsSpy = player.name == spyName;
+      obj = createStartGameMessage(playerIsSpy, placeName);
+      player.socket.emit('gameHasStarted', obj);
+    })
+  })
 
   socket.on('chatMessage', (data) => {
     socket.emit('chatMessage', data)
@@ -35,6 +35,7 @@ io.on('connection', function (socket) {
   })
 
   socket.on('echo', (data) => {
+    console.log('[ECHO]', data);
     socket.emit('echo', data)
   })
 });
