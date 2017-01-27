@@ -8,12 +8,20 @@ var io = require('socket.io').listen(server)
 io.on('connection', (socket) => {
   socket.on('playerJoinedGame', (data) => {
     game = findGame(data.token);
-    game.players.push({ name: data.playerName, socket: socket })
+    game.players.push({ id: data.playerId, name: data.playerName, socket: socket })
     _.each(game.players, (player) => {
-      obj = { players: _.map(game.players, (player) => _.pick(player, ['name'])) }
+      obj = { players: _.map(game.players, (player) => _.pick(player, ['id', 'name'])) }
       player.socket.emit('playersInGame', obj);
     })
   });
+
+  socket.on('playerReady', (data) => {
+    game = findGame(data.token);
+    findPlayer(game, data.playerId).ready = true
+    _.each(game.players, (player) => {
+      player.socket.emit('playerReady', { playerId: data.playerId });
+    })
+  })
 
   socket.on('adminGameStart', (data) => {
     var spyName = _.sample(game.players).name;
@@ -87,17 +95,18 @@ app.get('/', (request, response) => {
   response.render('pages/index');
 });
 app.post('/api/games', (request, response) => {
-  game = createGame(request.body.creatorName);
+  var game = createGame(request.body.creatorName);
   games.push(game);
-  response.json(game);
+  var user = { id: getUserId(game), name: game.creatorName }
+  response.json({ game: game, user: user });
 });
 app.post('/api/connections', (request, response) => {
   var token = request.body.token
   game = findGame(token)
-  console.log('game found?', !!game);
   if (game) {
+    var user = { id: getUserId(game), name: request.body.playerName }
     response.status(200)
-    response.json(_.pick(game, ['token', 'creatorName']))
+    response.json({ game: _.pick(game, ['token']), user: user })
   } else {
     response.status(404)
     response.json({ error: 'Game not found.' })
@@ -124,6 +133,12 @@ var createGame = (creatorName) => {
   return game;
 }
 
+var getUserId = (game) => {
+  let result = game.newPlayerId;
+  game.newPlayerId += 1;
+  return result;
+}
+
 var generateToken = (length) => {
   var token = '';
   for (var i = 0; i < length; i++) {
@@ -134,6 +149,10 @@ var generateToken = (length) => {
 
 var findGame = (token) => {
   return _.find(games, (game) => game.token == token)
+}
+
+var findPlayer = (game, playerId) => {
+  return _.find(game.players, (player) => player.id == playerId)
 }
 
 var randomPlaceName = () => {
