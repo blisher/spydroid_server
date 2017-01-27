@@ -83,18 +83,25 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 // Router setup
-app.get('/', function(request, response) {
+app.get('/', (request, response) => {
   response.render('pages/index');
 });
-app.post('/api/games', function(request, response) {
+app.post('/api/games', (request, response) => {
   game = createGame(request.body.creatorName);
   games.push(game);
-  response.send(JSON.stringify(game));
+  response.json(game);
 });
-app.post('/api/connections', function(request, response) {
+app.post('/api/connections', (request, response) => {
   var token = request.body.token
   game = findGame(token)
-  response.send(JSON.stringify(_.pick(game, ['token', 'creatorName'])));
+  console.log('game found?', !!game);
+  if (game) {
+    response.status(200)
+    response.json(_.pick(game, ['token', 'creatorName']))
+  } else {
+    response.status(404)
+    response.json({ error: 'Game not found.' })
+  }
 });
 
 // Methods
@@ -111,7 +118,8 @@ var createGame = (creatorName) => {
     creatorName: creatorName,
     token: generateToken(3),
     adminToken: generateToken(10),
-    players: []
+    players: [],
+    newPlayerId: 1
   };
   return game;
 }
