@@ -23,6 +23,12 @@ io.on('connection', (socket) => {
     removePlayerFromGame(game, data.playerId)
   })
 
+  socket.on('playerLeftLobby', (data) => {
+    game = findGame(data.token)
+    removePlayerFromGame(game, data.playerId)
+    broadcastPlayersList(game)
+  })
+
   socket.on('playerReady', (data) => {
     game = findGame(data.token);
     findPlayer(game, data.playerId).ready = true
@@ -50,6 +56,19 @@ io.on('connection', (socket) => {
       player.ready = false;
       player.socket.emit('gameHasEnded');
     })
+  })
+
+  socket.on('adminGameDelete', (data) => {
+    let game = findGameByAdminToken(data.adminToken)
+    let gameIndex = findIndex(games, (game2) => game2.token == game.token)
+    games.splice(gameIndex, 1)
+    _.each(game.players, (player) => {
+      player.socket.emit('gameHasDied');
+    })
+  })
+
+  socket.on('disconnect', (data) => {
+    console.log('[Socket Disconnected]', data);
   })
 
   socket.on('echo', (data) => {
@@ -160,7 +179,7 @@ var broadcastPlayersList = (game) => {
 }
 
 var removePlayerFromGame = (game, playerId) => {
-  let playerIndex = findIndex(game.players, (player) => { return player.id == data.playerId })
+  let playerIndex = findIndex(game.players, (player) => { return player.id == playerId })
   return game.players.splice(playerIndex, 1)
 }
 
