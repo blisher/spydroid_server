@@ -65,6 +65,9 @@ app.set('view engine', 'ejs');
 app.get('/', (request, response) => {
   response.render('pages/index');
 });
+app.get('/logs', (request, response) => {
+  response.render('pages/logs');
+});
 app.post('/api/games', (request, response) => {
   var game = createGame(request.body.creatorName);
   games.push(game);
@@ -119,7 +122,7 @@ var generateToken = (length) => {
 }
 
 var findGame = (token) => {
-  return _.find(games, (game) => game.token == token)
+  return _.find(games, (game) => game.token.toString() == token.toString())
 }
 
 var findPlayer = (game, playerId) => {
@@ -142,5 +145,7 @@ var createStartGameMessage = (isSpy, placeName) => {
 
 const PLACES = [
   'Paris',
-  'New York'
+  'New York',
+  'Metro',
+  'Your mom'
 ]

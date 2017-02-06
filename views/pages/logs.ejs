@@ -7,10 +7,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="/css/colors.css">
     <link rel="stylesheet" href="/css/main.css">
   </head>
-
   <body>
     <header class="bg-black">
       <div class="container">
@@ -25,24 +25,13 @@
     </header>
     <div class="container-wrapper bg-white">
       <div class="container layout-header">
-        <h1>Welcome on home</h1>
+        <h1>Application logs</h1>
       </div>
     </div>
     <div class="container-wrapper content-container">
       <div class="container layout-content">
         <section>
-          <h3 class='section-header'>Game stats</h3>
-          <p>Games created: <span id='counter-games'>0</span></p>
-          <p>Players currently connected: <span id='counter-sockets'>0</span></p>
-          <p>Players since server start: <span id='counter-views'>0</span></p>
-          <p>Requests performed: <span id='counter-requests'>0</span></p>
-        </section>
-        <section>
-          <h3 class='section-header'>Lorem ipsum</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet quam id dui posuere blandit. Proin eget tortor risus.</p>
-          <p>Proin eget tortor risus. Donec sollicitudin molestie malesuada. Pellentesque in ipsum id orci porta dapibus.</p>
-          <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus suscipit tortor eget felis porttitor volutpat. Quisque velit nisi, pretium ut lacinia in, elementum id enim.</p>
-          <p>Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>
+          <h3 class='section-header'>Activity feed</h3>
         </section>
       </div>
     </div>
