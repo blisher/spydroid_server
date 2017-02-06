@@ -10,11 +10,18 @@ io.on('connection', (socket) => {
   socket.on('playerJoinedGame', (data) => {
     game = findGame(data.token);
     game.players.push({ id: data.playerId, name: data.playerName, socket: socket })
-    _.each(game.players, (player) => {
-      obj = { players: _.map(game.players, (player) => _.pick(player, ['id', 'name'])) }
-      player.socket.emit('playersInGame', obj);
-    })
+    broadcastPlayersList(game)
   });
+
+  socket.on('playerJoinedLobby', (data) => {
+    game = findGame(data.token);
+    broadcastPlayersList(game)
+  });
+
+  socket.on('playerLeftGame', (data) => {
+    game = findGame(data.token);
+    removePlayerFromGame(game, data.playerId)
+  })
 
   socket.on('playerReady', (data) => {
     game = findGame(data.token);
@@ -40,17 +47,9 @@ io.on('connection', (socket) => {
     let game = findGameByAdminToken(data.adminToken)
     game.joinable = true
     _.each(game.players, (player) => {
+      player.ready = false;
       player.socket.emit('gameHasEnded');
     })
-  })
-
-  socket.on('chatMessage', (data) => {
-    socket.emit('chatMessage', data)
-    socket.broadcast.emit('chatMessage', data)
-  })
-
-  socket.on('chatJoined', (data) => {
-    socket.broadcast.emit('chatJoined', data)
   })
 
   socket.on('echo', (data) => {
@@ -151,6 +150,24 @@ var findPlayer = (game, playerId) => {
 
 var randomPlaceName = () => {
   return _.sample(PLACES);
+}
+
+var broadcastPlayersList = (game) => {
+  _.each(game.players, (player) => {
+    obj = { players: _.map(game.players, (player) => _.pick(player, ['id', 'name', 'ready'])) }
+    player.socket.emit('playersInGame', obj);
+  })
+}
+
+var removePlayerFromGame = (game, playerId) => {
+  let playerIndex = findIndex(game.players, (player) => { return player.id == data.playerId })
+  return game.players.splice(playerIndex, 1)
+}
+
+var findIndex = (collection, filter) => {
+  for (var i = 0; i < collection.length; i++) {
+    if (filter(collection[i])) { return i }
+  }
 }
 
 var createStartGameMessage = (isSpy, placeName) => {
