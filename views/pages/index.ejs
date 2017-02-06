@@ -11,23 +11,29 @@
     <script src="/chat.js"></script>
     <link rel="stylesheet" href="/css/colors.css">
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/chat.css">
   </head>
 
   <body>
-    <div class="header bg-black">
-      <div class="container">
-        <div class="col-md-12">
+    <header class="bg-black">
+      <div class="outer-container">
+        <div class="inner-container">
           <h1 class="color-almost-white">Spy!</h1>
         </div>
       </div>
-    </div>
-    <div class="chat">
-      <div id="output">
+    </header>
+    <div class="outer-container bg-white">
+      <div class="inner-container layout-header">
+        <h1>Welcome</h1>
       </div>
-      <form id="form">
-        Message: <input size="50" id="msg"> <input type="submit" value="Submit">
-      </form>
+    </div>
+    <div class="outer-container content-container">
+      <div class="inner-container layout-content">
+        <div id="output">
+        </div>
+        <form id="form">
+          Message: <input size="50" id="msg"> <input type="submit" value="Submit">
+        </form>
+      </div>
     </div>
   </body>
 </html>
