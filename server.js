@@ -8,28 +8,33 @@ var favicon = require('serve-favicon');
 // Socket.io server setup
 io.on('connection', (socket) => {
   socket.on('playerJoinedGame', (data) => {
+    broadcastLog('player joined game')
     game = findGame(data.token);
     game.players.push({ id: data.playerId, name: data.playerName, socket: socket })
     broadcastPlayersList(game)
   });
 
   socket.on('playerJoinedLobby', (data) => {
+    broadcastLog('player joined lobby')
     game = findGame(data.token);
     broadcastPlayersList(game)
   });
 
   socket.on('playerLeftGame', (data) => {
+    broadcastLog('player left game')
     game = findGame(data.token);
     removePlayerFromGame(game, data.playerId)
   })
 
   socket.on('playerLeftLobby', (data) => {
+    broadcastLog('player left lobby')
     game = findGame(data.token)
     removePlayerFromGame(game, data.playerId)
     broadcastPlayersList(game)
   })
 
   socket.on('playerReady', (data) => {
+    broadcastLog('player ready')
     game = findGame(data.token);
     findPlayer(game, data.playerId).ready = true
     _.each(game.players, (player) => {
@@ -38,6 +43,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('adminGameStart', (data) => {
+    broadcastLog('admin started game')
     let game = findGameByAdminToken(data.adminToken)
     game.joinable = false
     let spyName = _.sample(game.players).name;
@@ -50,6 +56,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('adminGameEnd', (data) => {
+    broadcastLog('admin ended game')
     let game = findGameByAdminToken(data.adminToken)
     game.joinable = true
     _.each(game.players, (player) => {
@@ -59,6 +66,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('adminGameDelete', (data) => {
+    broadcastLog('admin deleted game')
     let game = findGameByAdminToken(data.adminToken)
     let gameIndex = findIndex(games, (game2) => game2.token == game.token)
     games.splice(gameIndex, 1)
@@ -72,10 +80,37 @@ io.on('connection', (socket) => {
   })
 
   socket.on('echo', (data) => {
-    console.log('[ECHO]', data);
+    broadcastLog('someone echoed')
+    console.log('[Echo]', data);
     socket.emit('echo', data)
   })
 });
+
+let logsListenersCount = 0
+let logsListeners = []
+let logs = io.of('/io_logs');
+logs.on('connection', function(socket){
+  logsListeners.push(socket)
+  changeListenersCount(1)
+
+  socket.on('disconnect', (data) => {
+    changeListenersCount(-1)
+  })
+});
+
+var broadcastLog = (message) => {
+  console.log('[Log]', message);
+  logsListeners.forEach((listener) => {
+    listener.emit('log', { message: message })
+  })
+}
+
+var changeListenersCount = (n) => {
+  logsListenersCount += n
+  logsListeners.forEach((listener) => {
+    listener.emit('listenersCount', { count: logsListenersCount })
+  })
+}
 
 // Variables start
 var games = [];
