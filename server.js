@@ -25,12 +25,22 @@ io.on('connection', (socket) => {
   })
 
   socket.on('adminGameStart', (data) => {
-    var spyName = _.sample(game.players).name;
-    var placeName = randomPlaceName();
+    let game = findGameByAdminToken(data.adminToken)
+    game.joinable = false
+    let spyName = _.sample(game.players).name;
+    let placeName = randomPlaceName();
     _.each(game.players, (player) => {
       playerIsSpy = player.name == spyName;
       obj = createStartGameMessage(playerIsSpy, placeName);
       player.socket.emit('gameHasStarted', obj);
+    })
+  })
+
+  socket.on('adminGameEnd', (data) => {
+    let game = findGameByAdminToken(data.adminToken)
+    game.joinable = true
+    _.each(game.players, (player) => {
+      player.socket.emit('gameHasEnded');
     })
   })
 
@@ -78,9 +88,15 @@ app.post('/api/connections', (request, response) => {
   var token = request.body.token
   game = findGame(token)
   if (game) {
-    var user = { id: getUserId(game), name: request.body.playerName }
-    response.status(200)
-    response.json({ game: _.pick(game, ['token']), user: user })
+    if (game.joinable) {
+      var user = { id: getUserId(game), name: request.body.playerName }
+      response.status(200)
+      response.json({ game: _.pick(game, ['token']), user: user })
+    } else {
+      response.status(403)
+      response.json({ error: 'You cannot join this game.' })
+    }
+
   } else {
     response.status(404)
     response.json({ error: 'Game not found.' })
@@ -97,14 +113,14 @@ var broadcast = (server, msg) => {
 }
 
 var createGame = (creatorName) => {
-  var game = {
+  return {
     creatorName: creatorName,
     token: generateToken(3),
     adminToken: generateToken(10),
     players: [],
-    newPlayerId: 1
-  };
-  return game;
+    newPlayerId: 1,
+    joinable: true
+  }
 }
 
 var getUserId = (game) => {
@@ -123,6 +139,10 @@ var generateToken = (length) => {
 
 var findGame = (token) => {
   return _.find(games, (game) => game.token.toString() == token.toString())
+}
+
+var findGameByAdminToken = (adminToken) => {
+  return _.find(games, (game) => game.adminToken.toString() == adminToken.toString())
 }
 
 var findPlayer = (game, playerId) => {
