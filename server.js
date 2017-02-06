@@ -3,6 +3,7 @@ var express = require('express')
 var app = express()
 var server = app.listen(5000, () => { console.log('Running on port 5000') } )
 var io = require('socket.io').listen(server)
+var favicon = require('serve-favicon');
 
 // Socket.io server setup
 io.on('connection', (socket) => {
@@ -48,37 +49,6 @@ io.on('connection', (socket) => {
   })
 });
 
-// Websocket server setup
-// var ws = require('nodejs-websocket')
-// var server = ws.createServer(function (conn) {
-//   conn.on('text', function (message) {
-//     messageObj = JSON.parse(message);
-//     switch (messageObj.type) {
-//       case 'playerJoinedGame':
-//         game = findGame(messageObj.token);
-//         game.players.push({ name: messageObj.playerName, socket: conn })
-//         _.each(game.players, (player) => {
-//           obj = { type: 'playersInGame', players: _.map(game.players, (player) => _.pick(player, ['name'])) }
-//           player.socket.sendText(JSON.stringify(obj));
-//         })
-//         break;
-//       case 'adminGameStart':
-//         var spyName = _.sample(game.players).name;
-//         var placeName = randomPlaceName();
-//         _.each(game.players, (player) => {
-//           playerIsSpy = player.name == spyName;
-//           obj = createStartGameMessage(playerIsSpy, placeName);
-//           player.socket.sendText(JSON.stringify(obj));
-//           console.log(JSON.stringify(obj));
-//         })
-//         break;
-//     }
-//   })
-//   conn.on('close', function (code, reason) {
-//     console.log('Connection closed')
-//   })
-// }).listen(8001)
-
 // Variables start
 var games = [];
 
@@ -86,6 +56,7 @@ var games = [];
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/app'));
 app.use(express.static(__dirname + '/assets'));
+app.use(favicon(__dirname + '/assets/images/favicon.ico'));
 app.use(require('body-parser').json())
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
