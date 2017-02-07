@@ -155,6 +155,13 @@ app.post('/api/connections', (request, response) => {
     response.json({ error: 'Game not found.' })
   }
 });
+app.get('/reset', (request, response) => {
+  games.splice(0, games.length)
+  if (games.length == 0) {
+    response.status(200)
+    response.json({ status: 'success' })
+  }
+})
 
 // Methods
 var _ = require('lodash');
