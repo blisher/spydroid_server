@@ -99,7 +99,6 @@ logs.on('connection', function(socket){
 });
 
 var broadcastLog = (message) => {
-  console.log('[Log]', message);
   logsListeners.forEach((listener) => {
     listener.emit('log', { message: message })
   })
