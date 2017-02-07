@@ -161,6 +161,9 @@ app.get('/reset', (request, response) => {
     response.json({ status: 'success' })
   }
 })
+app.get('/api/status', (request, response) => {
+  response.json(true)
+})
 
 // Methods
 var _ = require('lodash');
