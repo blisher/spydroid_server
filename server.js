@@ -244,8 +244,30 @@ var createStartGameMessage = (isSpy, placeName) => {
 }
 
 const PLACES = [
-  'Paris',
-  'New York',
-  'Metro',
-  'Your mom'
+  'Teatr',
+  'Restauracja',
+  'Plaża',
+  'School',
+  'Supermarket',
+  'Warsztat samochodowy',
+  'Cyrk',
+  'Szpital',
+  'Pociąg pasażerski',
+  'Bank',
+  'Samolot pasażerski',
+  'Komisariat policji',
+  'Statek piracki',
+  'Studio filmowe',
+  'Baza wojskowa',
+  'Łódź podwodna',
+  'Statek pasażerski',
+  'Stacja polarna',
+  'Hotel',
+  'Impreza firmowa',
+  'Salon SPA',
+  'Uniwersytet',
+  'Ambasada',
+  'Stacja kosmiczna',
+  'Kasyno',
+  'Kościół'
 ]
