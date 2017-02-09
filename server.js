@@ -164,6 +164,9 @@ app.get('/reset', (request, response) => {
 app.get('/api/status', (request, response) => {
   response.json(true)
 })
+app.get('/places', (request, response) => {
+  response.send(PLACES.join("\n"))
+})
 
 // Methods
 var _ = require('lodash');
